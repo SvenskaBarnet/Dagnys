@@ -9,7 +9,4 @@ public class OrderItemModel
     public required ProductModel Product { get; set; }
     public int OrderId { get; set; }
     public required OrderModel Order { get; set; }
-
-    [DefaultValue("Pending")]
-    public string? Status { get; set; }
 }

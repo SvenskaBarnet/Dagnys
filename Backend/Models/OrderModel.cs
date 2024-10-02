@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
 namespace Backend.Models;
 public class OrderModel
@@ -24,4 +25,7 @@ public class OrderModel
 
     [MaxLength(500)]
     public string? Notes { get; set; }
+
+    [DefaultValue("Pending")]
+    public string? Status { get; set; }
 }
