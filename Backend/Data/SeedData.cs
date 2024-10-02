@@ -1,11 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Backend.Models;
 
 namespace Backend.Data
 {
     public static class SeedData
     {
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static void SeedProducts(IServiceProvider serviceProvider)
         {
             using (var context = new DagnysContext(
                 serviceProvider.GetRequiredService<DbContextOptions<DagnysContext>>()))
@@ -31,24 +32,36 @@ namespace Backend.Data
                     },
                     new ProductModel
                     {
-                        Name = "Blueberry Muffin",
-                        Description = "A muffin packed with fresh blueberries.",
-                        Price = 1.99M
-                    },
-                    new ProductModel
-                    {
-                        Name = "Cinnamon Roll",
-                        Description = "A sweet roll with cinnamon and icing.",
-                        Price = 3.49M
-                    },
-                    new ProductModel
-                    {
                         Name = "Bagel",
                         Description = "A classic bagel, perfect for breakfast.",
                         Price = 1.49M
                     }
                 );
                 context.SaveChanges();
+            }
+        }
+
+        public static async Task SeedUsers(IServiceProvider serviceProvider)
+        {
+            var userManager = serviceProvider.GetRequiredService<UserManager<UserModel>>();
+
+            if (userManager.Users.Any())
+            {
+                return; // DB has been seeded
+            }
+
+            var user = new UserModel
+            {
+                UserName = "admin@example.com",
+                Email = "admin@example.com",
+                EmailConfirmed = true
+            };
+
+            var result = await userManager.CreateAsync(user, "Admin@123");
+
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException("Failed to create user: " + string.Join(", ", result.Errors.Select(e => e.Description)));
             }
         }
     }

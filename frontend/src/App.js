@@ -1,52 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
-import { Component } from 'react';
-class App extends Component {
+// src/App.js
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Products from './components/Products';
+import Cart from './components/Cart';
+import { CartProvider } from './contexts/CartContext';
+import Login from './components/Login';
+import Logout from './components/Logout';
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      products: []
-    }
-  }
-
-  API_URL = "http://localhost:5253/";
-
-  componentDidMount() {
-    this.refreshProducts();
-  }
-
-  async refreshProducts() {
-    try {
-      const response = await fetch(this.API_URL + "api/v1/products", {
-        method: 'GET'
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      this.setState({ products: data });
-    } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
-    }
-  }
-
-  render() {
-    const { products } = this.state;
-    return (
-      <div className="App">
-        <h1>Dagnys Bullar</h1>
-
-        {products.map(product =>
-          <div key={product.Id}>
-            <h3>{product.Name}</h3>
-            <p>{product.Description}</p>
-            <p>{product.Price} kr</p>
+const App = () => {
+  return (
+    <CartProvider>
+      <Router>
+        <div className="App">
+          <Navbar />
+          <div className="container mt-5">
+            <Routes>
+              <Route path="/" element={<h1 className="text-center">Welcome to Dagnys Bullar</h1>} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/logout" element={<Logout />} />
+            </Routes>
           </div>
-        )}
-      </div>
-    );
-  }
-}
+        </div>
+      </Router>
+    </CartProvider>
+  );
+};
 
 export default App;
